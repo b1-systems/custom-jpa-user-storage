@@ -8,13 +8,17 @@
 
 name=$(basename "$(readlink -f "$0")")
 dir=$(dirname "$(readlink -f "$0")")
-developer_deployment_dir=$(readlink -f "$dir"/../../keycloak-developer-deployment)
 
-keycloak_custom_dir="$developer_deployment_dir"/keycloak-custom
 jar=$(readlink -f "$dir"/../target/custom-jpa-user-storage.jar)
-providers_dir="$keycloak_custom_dir"/providers
+conf_example=$(readlink -f "$dir"/../conf/keycloak.conf.example)
 sql=$(readlink -f "$dir"/../sql/postgres/userdb.sql)
+
+developer_deployment_dir=$(readlink -f "$dir"/../../keycloak-developer-deployment)
+keycloak_custom_dir="$developer_deployment_dir"/keycloak-custom
 sql_dir="$developer_deployment_dir"/sql
+providers_dir="$keycloak_custom_dir"/providers
+conf_dir="$keycloak_custom_dir"/conf
+conf="$conf_dir"/keycloak.conf
 
 ##
 # Main Program
@@ -25,6 +29,12 @@ echo "INFO: $name starting ..." >&2
 if ! [[ -d "$developer_deployment_dir" ]] ; then
 	echo "WARNING: Developer deployment not found at $developer_deployment_dir; skipped." >&2
 	exit 0
+elif ! mkdir -p "$conf_dir" ; then
+	echo "ERROR: Creating conf_dir=$conf_dir failed" >&2
+	exit 1
+elif ! cp -v "$conf_example" "$conf" ; then
+	echo "ERROR: Copying $conf_example to $conf failed" >&2
+	exit 1
 elif ! mkdir -p "$providers_dir" ; then
 	echo "ERROR: Creating providers_dir=$providers_dir failed" >&2
 	exit 1
