@@ -1,0 +1,8 @@
+# Options specific for extension "custom-jpa-user-storage"
+
+# Configure the datasource
+db-kind-custom-jpa-user-datasource=postgres
+db-url-full-custom-jpa-user-datasource=jdbc:postgresql://postgres/userdb
+db-username-custom-jpa-user-datasource=userdb
+db-password-custom-jpa-user-datasource=userdb
+transaction-xa-enabled-custom-jpa-user-datasource=true
