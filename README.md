@@ -102,7 +102,7 @@ rebuild of the affected Keycloak instances has to be performed.
 container image:
 
 ```shell
-docker compose -f ../developer-deployment/compose.yml build
+docker compose -f ../keycloak-developer-deployment/compose.yml build
 ```
 ## 3 Setting up the User Database
 

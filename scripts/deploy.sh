@@ -1,14 +1,14 @@
 #!/bin/bash
 # run by exec-maven-plugin at the end of the "package" phase,
-# determines if ../developer-deployment is present and, if yes,
-# deploys JAR to ../developer-deployment/keycloak-custom/providers.
+# determines if ../keycloak-developer-deployment is present and, if yes,
+# deploys JAR to ../keycloak-developer-deployment/keycloak-custom/providers.
 
 ##
 # Configuration
 
 name=$(basename "$(readlink -f "$0")")
 dir=$(dirname "$(readlink -f "$0")")
-developer_deployment_dir=$(readlink -f "$dir"/../../developer-deployment)
+developer_deployment_dir=$(readlink -f "$dir"/../../keycloak-developer-deployment)
 
 keycloak_custom_dir="$developer_deployment_dir"/keycloak-custom
 jar=$(readlink -f "$dir"/../target/custom-jpa-user-storage.jar)
