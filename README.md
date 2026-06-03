@@ -13,6 +13,9 @@ possibility to develop Keycloak plugins supporting other datasource types.
 The storage provider presented here can import users, realm- and client roles
 from a pre-existing relational database into a Keycloak realm.
 
+This Keycloak extension has been created for training purposes and is fine-tuned
+for use with [the corresponding developer deployment](https://github.com/b1-systems/keycloak-developer-deployment).
+
 This storage provider is hardcoded to use a PostgreSQL database as external
 user source; changing the database driver to a different datasource driver
 supported by Keycloak is explained below (see 
@@ -29,18 +32,17 @@ following tables:
   - the first name of the user (can be empty),
   - the last name of the user (can be empty),
   - an email address of the user (can be empty) and
+  - a custom attribute `phoneNumber`
   - a salted password hash (if NULL, no password is associated with the user).
 
 * `client_roles` contains rows of client-IDs and client role names.
-
-* A mapping table assigns zero or more client roles to each user.
+  - A mapping table assigns zero or more client roles to each user.
 
 * `realm_roles` contains rows of realm role names.
-
-* A mapping table assigns zero or more realm roles to each user.
+  - A mapping table assigns zero or more realm roles to each user.
 
 The configuration and the example SQL data presented here demonstrate this
-setup for a PostGreSQL database (tested with postgres 15), but they can be
+setup for PostgreSQL (tested with postgres 16), but they can be
 modified to support MariaDB, MySQL and other database types.
 
 ### 1.3 See Also
@@ -87,14 +89,17 @@ transaction-xa-enabled-custom-jpa-user-datasource=true
 
 ### 2.4 Deploying the Provider
 
-*Note:* This project uses exec-maven-plugin to run
-[scripts/deploy.sh](scripts/deploy.sh) after every build. This script will
-deploy `custom-jpa-user-storage.jar` to the developer deployment.
-
 The Keycloak extension JAR will be build in
 `target/custom-jpa-user-storage.jar`. It has to be transferred to the container
 build pipeline or the Keycloak installations "providers" directory, and a
 rebuild of the affected Keycloak instances has to be performed.
+
+*Note:* This project uses exec-maven-plugin to run
+[deploy.sh](scripts/deploy.sh) after every build. This script will
+deploy `keycloak.conf` (from [the example](conf/keycloak.conf.example)),
+`custom-jpa-user-storage.jar` and [userdb.sql](sql/postgres/userdb.sql)
+to the [developer deployment](https://github.com/b1-systems/keycloak-developer-deployment)
+if present.
 
 ### 2.5 Rebuild the Developer Deployment Custom Keycloak Container
 
