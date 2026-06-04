@@ -19,12 +19,13 @@ test_script_dir=$(readlink -f "$dir"/../tests/"$artifact_id")
 
 developer_deployment_dir=$(readlink -f "$dir"/../../keycloak-developer-deployment)
 keycloak_custom_dir="$developer_deployment_dir"/keycloak-custom
+keycloak_test_dir="$developer_deployment_dir"/keycloak-test
 sql_dir="$developer_deployment_dir"/sql
 providers_dir="$keycloak_custom_dir"/providers
 conf_d_dir="$keycloak_custom_dir"/conf/keycloak.conf.d
 conf="$conf_d_dir"/"$artifact_id".conf
-tests_dir="$keycloak_custom_dir"/tests
-tests_script_dir="$keycloak_custom_dir"/tests/"$artifact_id"
+tests_dir="$keycloak_test_dir"/tests
+tests_script_dir="$keycloak_test_dir"/tests/"$artifact_id"
 
 ##
 # Main Program
