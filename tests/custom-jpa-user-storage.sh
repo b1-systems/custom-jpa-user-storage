@@ -1,59 +1,22 @@
 #!/bin/bash
-# Using Keycloak REST-API, instanciate custom JPA provider if missing,
-# and check if expected example user was successfully imported.
+# Tests for custom-jpa-user-storage
+# shellcheck disable=SC1091,SC2154
 
 ##
 # Configuration
 
-keycloak_url="http://keycloak:8080"
-keycloak_realm="master"
-keycloak_admin_user="admin"
-keycloak_admin_password="admin"
-keycloak_component_name="userdb"
-keycloak_component_provider_id="custom-jpa-user-storage"
-keycloak_component_provider_type="org.keycloak.storage.UserStorageProvider"
-keycloak_test_username="mmustermann"
-keycloak_test_attribute="phoneNumber"
-keycloak_test_value="0123 456789"
-
 dir=$(readlink -f "$(dirname "$0")")
+. "$dir"/include.sh
 
-##
-# Functions
-
-check() {
-    for status in "$@" ; do
-        [[ $status -ne 0 ]] && {
-            return 1
-        }
-    done
-
-    return 0
-}
-
-kcadm_cmdline=(
-    /opt/keycloak/bin/kcadm.sh
-)
-
-kcadm() {
-    "${kcadm_cmdline[@]}" "$@"
-}
+component_name="userdb"
+component_provider_id="custom-jpa-user-storage"
+component_provider_type="org.keycloak.storage.UserStorageProvider"
+test_username="mmustermann"
+test_attribute="phoneNumber"
+test_value="0123 456789"
 
 ##
 # Main Program
-
-kcadm config credentials \
-    --server "$keycloak_url" \
-    --realm "$keycloak_realm" \
-    --user "$keycloak_admin_user" \
-    --password "$keycloak_admin_password"
-
-if check "${PIPESTATUS[@]}" ; then
-    echo "INFO: Authenticated to Keycloak REST-API." >&2
-else
-    echo "ERROR: Authenticating to Keycloak REST-API failed." >&2
-    exit 1
-fi
 
 userdb_id=$(
     kcadm get components | \
@@ -64,9 +27,9 @@ if [[ -n $userdb_id ]] ; then
     echo "INFO: Component \"userdb\" already present with id=$userdb_id; not creating." >&2
 else
     kcadm create components \
-            --set name="$keycloak_component_name" \
-            --set providerId="$keycloak_component_provider_id" \
-            --set providerType="$keycloak_component_provider_type"
+            --set name="$component_name" \
+            --set providerId="$component_provider_id" \
+            --set providerType="$component_provider_type"
 
     if check "${PIPESTATUS[@]}" ; then
         echo "INFO: Created userdb component." >&2
@@ -79,20 +42,20 @@ fi
 username=$(
     kcadm get users \
         --fields username | \
-        jq -r '.[] | select(.username=="'"$keycloak_test_username"'").username'
+        jq -r '.[] | select(.username=="'"$test_username"'").username'
 )
 
 if check "${PIPESTATUS[@]}" ; then
-    echo "INFO: Searched for username==\"$keycloak_test_username\"." >&2
+    echo "INFO: Searched for username==\"$test_username\"." >&2
 else
-    echo "ERROR: Searching for username==\"$keycloak_test_username\" failed." >&2
+    echo "ERROR: Searching for username==\"$test_username\" failed." >&2
     exit 1
 fi
 
 if [[ -n $username ]] ; then
-    echo "INFO: Found expected sample user with username==\"$keycloak_test_username\"." >&2
+    echo "INFO: Found expected sample user with username==\"$test_username\"." >&2
 else
-    echo "ERROR: Expected sample user with username==\"$keycloak_test_username\" not found." >&2
+    echo "ERROR: Expected sample user with username==\"$test_username\" not found." >&2
     exit 1
 fi
 
@@ -124,20 +87,20 @@ fi
 
 value=$(
     kcadm get users \
-        --fields 'username,attributes('"$keycloak_test_attribute"')' | \
-        jq -r '.[] | select(.username=="'"$keycloak_test_username"'").attributes.'"$keycloak_test_attribute"'[0]'
+        --fields 'username,attributes('"$test_attribute"')' | \
+        jq -r '.[] | select(.username=="'"$test_username"'").attributes.'"$test_attribute"'[0]'
 )
 
 if check "${PIPESTATUS[@]}" ; then
-   echo "INFO: Queried user \"$keycloak_test_username\" in Keycloak realm \"$keycloak_realm\" for value of attribute \"$keycloak_test_attribute\"." >&2
+   echo "INFO: Queried user \"$test_username\" in Keycloak realm \"$keycloak_realm\" for value of attribute \"$test_attribute\"." >&2
 else
-   echo "ERROR: Could not query user \"$keycloak_test_username\" in Keycloak realm \"$keycloak_realm\" for value of attribute \"$keycloak_test_attribute\"." >&2
+   echo "ERROR: Could not query user \"$test_username\" in Keycloak realm \"$keycloak_realm\" for value of attribute \"$test_attribute\"." >&2
    exit 1
 fi
 
-if [[ $value = "$keycloak_test_value" ]] ; then
-    echo "INFO: Profile attribute \"$keycloak_test_attribute\" of user \"$keycloak_test_username\" in Keycloak realm \"$keycloak_realm\" has expected value \"$keycloak_test_value\"." >&2
+if [[ $value = "$test_value" ]] ; then
+    echo "INFO: Profile attribute \"$test_attribute\" of user \"$test_username\" in Keycloak realm \"$keycloak_realm\" has expected value \"$test_value\"." >&2
 else
-    echo "ERROR: Profile attribute \"$keycloak_test_attribute\" of user \"$keycloak_test_username\" in Keycloak realm \"$keycloak_realm\" does not have expected value \"$keycloak_test_value\"." >&2
+    echo "ERROR: Profile attribute \"$test_attribute\" of user \"$test_username\" in Keycloak realm \"$keycloak_realm\" does not have expected value \"$test_value\"." >&2
     exit 1
 fi
