@@ -141,6 +141,9 @@ CREATE DATABASE userdb WITH ENCODING='UTF8' OWNER=userdb;
 
 ### 3.2 Create the Database Tables
 
+*Note:* All SQL statements below are also included in
+[custom-jpa-user-storage.sql](sql/postgres/custom-jpa-user-storage.sql).
+
 Create the database table for user entities that will specify one identity per
 row, containing user attributes supported by this storage provider:
 
@@ -247,6 +250,9 @@ ALTER TABLE ONLY public.users_to_realm_roles
 ```
 
 ### 3.3 Populate the Database with Test Data
+
+*Note:* All SQL statements below are also included in
+[custom-jpa-user-storage.sql](sql/postgres/custom-jpa-user-storage.sql).
 
 The following record in the users table declares a user with preferred username
 "mmustermann", password `B1Systems!` and example email and profile attributes:
