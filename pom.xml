@@ -39,7 +39,7 @@
     <properties>
         <version.compiler.maven.plugin>3.5.1</version.compiler.maven.plugin>
         <version.hibernate.javax.persistence>1.0.0.Final</version.hibernate.javax.persistence>
-        <jboss.logging.version>3.5.3.Final</jboss.logging.version>
+        <jboss.logging.version>3.6.1.Final</jboss.logging.version>
         <keycloak.version>26.6.2</keycloak.version>
         <maven.compiler.release>21</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -68,7 +68,7 @@
         <dependency>
             <groupId>org.jboss.logging</groupId>
             <artifactId>jboss-logging</artifactId>
-        <version>${jboss.logging.version}</version>
+            <version>${jboss.logging.version}</version>
             <scope>provided</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/commons-codec/commons-codec -->
