@@ -27,9 +27,9 @@ if [[ -n $userdb_id ]] ; then
     echo "INFO: Component \"userdb\" already present with id=$userdb_id; not creating." >&2
 else
     kcadm create components \
-            --set name="$component_name" \
-            --set providerId="$component_provider_id" \
-            --set providerType="$component_provider_type"
+        --set name="$component_name" \
+        --set providerId="$component_provider_id" \
+        --set providerType="$component_provider_type"
 
     if check "${PIPESTATUS[@]}" ; then
         echo "INFO: Created userdb component." >&2
