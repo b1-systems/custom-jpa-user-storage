@@ -445,7 +445,6 @@ db-url-full-custom-jpa-user-datasource=jdbc:mariadb://mdbsrc01/userdb
 
 ## Author, Copyright and License Information
 
-* Author: Tilman Kranz &lt;[kranz@b1-systems.de](mailto:kranz@b1-systems.de)&gt;
 * Copyright 2024-2026 B1 Systems GmbH &lt;[info@b1-systems.de](mailto:info@b1-systems.de)&gt;
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
