@@ -384,17 +384,20 @@ Create a role "admin" in client "testclient" using the ID value from the previou
 
 This project features some hardcoded behavior in
 [src/main/resources/META-INF/persistence.xml](src/main/resources/META-INF/persistence.xml),
-because not all required Hibernate settings can currently be made using the
-properties file. Consider the following Hibernate properties that are set in
-`persistence.xml`:
+because not all required settings of Hibernate can currently be made using a
+properties file, a configuration file or runtime configuration. Consider the
+following Hibernate properties that are set in `persistence.xml`:
 
 * `hibernate.dialect`  
   This setting fixes the query language to a specific value (for example
   "PostgreSQLDialect") and is set in "persistence.xml" and not in
   "quarkus.properties" file for reasons that are currently intrinsic to
   Quarkus. Making this configurable exceeds the scope of this demonstration.
-  Effectively, to support a different database, "custom-jpa-user-storage.jar" has to
-  be rebuilt.
+  Effectively, to support a different database, "custom-jpa-user-storage.jar"
+  has to be rebuilt.  
+  See the next section
+  ["5.2 Changing the Database Driver"](#52-changing-the-database-driver)
+  for details.
 
 * `hibernate.hbm2ddl.auto`  
   The proposed setting of "none" instructs hibernate not to check, drop, update
@@ -414,7 +417,8 @@ properties file. Consider the following Hibernate properties that are set in
   datasources.
 
 *Note:* There are other Hibernate settings, such as the fetching strategy,
-which could be relevant in a production setting but are not demonstrated here. 
+which could be relevant in a production setting but are not demonstrated here
+(see [^5] for the documentation of all possible settings).
 
 ### 5.2 Changing the Database Driver
 
@@ -439,17 +443,6 @@ db-kind-custom-jpa-user-datasource=mariadb
 db-url-full-custom-jpa-user-datasource=jdbc:mariadb://mdbsrc01/userdb
 ```
 
-### 5.3 How Mappings to Missing Roles are Handled
-
-If a mapped entity in database table `client_roles` specifies a client or a
-role name that does not exist in the federated realm, a log message of warning
-level will be produced:
-
-```
-User `mmustermann` requests client role `testclient.admin`, but client
-`testclient` does not exist; client role not assigned.
-```
-
 ## Author, Copyright and License Information
 
 * Author: Tilman Kranz &lt;[kranz@b1-systems.de](mailto:kranz@b1-systems.de)&gt;
@@ -470,3 +463,4 @@ specific language governing permissions and limitations under the License.
 [^2]: <https://www.keycloak.org/docs/latest/server_development/index.html#_user-storage-spi>
 [^3]: <https://hibernate.org/orm/>
 [^4]: <https://github.com/keycloak/keycloak-quickstarts/tree/latest/extension/user-storage-jpa>
+[^5]: <https://docs.hibernate.org/stable/orm/userguide/html_single/#settings>
