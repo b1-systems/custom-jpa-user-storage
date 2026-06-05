@@ -1,4 +1,4 @@
-/* Copyright 2024  B1 Systems GmbH <info@b1-systems.de>
+/* Copyright 2024-2026  B1 Systems GmbH <info@b1-systems.de>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
