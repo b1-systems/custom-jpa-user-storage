@@ -113,8 +113,10 @@ docker compose -f ../keycloak-developer-deployment/compose.yml build
 
 ### Notes
 
-When using the developer deployment, you can skip this section; the deployment
-already includes an example database "userdb" containing sample data.
+*Note:* When using the developer deployment, you can skip this section; Maven
+distributes the example database "userdb" to the deployment automatically after
+every package build. Continue with section
+["4 Create User Federation in Keycloak"](#4-create-user-federation-in-keycloak).
 
 The following sections individually explain how to create and populate an
 example user database. See the [example SQL file](sql/postgres/userdb.sql) for
@@ -319,7 +321,8 @@ The remaining steps can also be done using the admin GUI of Keycloak.
 ### 4.1 Authenticate using "kcadm.sh"
 
 To start using "kcadm.sh" for setting up a realm, attaching the provider and
-creating the test client, first log in to the realm with a management account:
+creating the test client, first log in to a Keycloak realm with a realm admin
+account:
 
 ```shell
 /opt/keycloak/bin/kcadm.sh config credentials \
@@ -329,34 +332,24 @@ creating the test client, first log in to the realm with a management account:
     --password admin
 ```
 
-### 4.2 Add the User Storage Test Provider to the Realm
-
-```shell
-kcadm.sh create components \
-    -r master \
-    -s name="custom-jpa-user-storage" \
-    -s providerId="custom-jpa-user-storage" \
-    -s providerType="org.keycloak.storage.UserStorageProvider"
-```
-
-### 4.3 Create the Test Realm Role
+### 4.2 Create the Test Realm Role
 
 Create a role "testrole" in realm "master":
 
 ```shell
-kcadm.sh create roles \
+/opt/keycloak/bin/kcadm.sh create roles \
     -r master \
     -s name=testrole
 ```
 
-### 4.4 Create the Test Client
+### 4.3 Create the Test Client
 
 Create an OIDC client "testclient" in realm "master":
 
 ```
 echo '{
     "clientId": "testclient"
-}' | kcadm.sh create clients -r master -f -
+}' | /opt/keycloak/bin/kcadm.sh create clients -r master -f -
 ```
 
 This results in an ID value for the client:
@@ -365,14 +358,24 @@ This results in an ID value for the client:
 Created new client with id '9d97b37c-77a9-4cd8-bf6e-2ee5f0028429'
 ```
 
-### 4.5 Create the Test Client Role
+### 4.4 Create the Test Client Role
 
 Create a role "admin" in client "testclient" using the ID value from the previous command:
 
 ```
-kcadm.sh create -r master \
+/opt/keycloak/bin/kcadm.sh create -r master \
     clients/9d97b37c-77a9-4cd8-bf6e-2ee5f0028429/roles \
     -s name=admin
+```
+
+### 4.5 Add the User Storage Test Provider to the Realm
+
+```shell
+/opt/keycloak/bin/kcadm.sh create components \
+    -r master \
+    -s name="custom-jpa-user-storage" \
+    -s providerId="custom-jpa-user-storage" \
+    -s providerType="org.keycloak.storage.UserStorageProvider"
 ```
 
 ## 5 Known Limitations
